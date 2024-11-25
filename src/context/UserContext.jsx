@@ -1,54 +1,44 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
-import api from 'api'
+import React, { createContext, useContext, useReducer } from "react";
 
-export const UserContext = createContext() 
+export const UserContext = createContext();
+
+export const UserReducer = (state, action) => {
+  if (action.type === "UPDATE_DATA") {
+    return { ...state, [action.key]: action.value };
+  }
+  if (action.type === "UPDATE_STATE") {
+    return { ...state, ...action.state };
+  }
+  return { ...state };
+};
+
+const initState = {
+  user: null,
+  token: localStorage.getItem("access_token"),
+};
 
 export const UserProvider = (props) => {
-    // const [token, setToken] = useState(localStorage.getItem("userToken")) 
-    const [userData, setUserData] = useState({
-        token : localStorage.getItem("userToken"),
-        user: null,
-        preferences : localStorage.getItem("userPreferences")   
-    })
+  const [state, dispatch] = useReducer(UserReducer, initState);
+  return (
+    <UserContext.Provider
+      value={{
+        state,
+        updateData: (key, value) =>
+          dispatch({
+            type: "UPDATE_DATA",
+            key,
+            value,
+          }),
+        updateState: (state_) =>
+          dispatch({
+            type: "UPDATE_STATE",
+            state: state_,
+          }),
+      }}
+    >
+      {props.children}
+    </UserContext.Provider>
+  );
+};
 
-    useEffect(() => {
-        const fetchUser = async() => {
-            try {
-                // console.log("user context");
-                const response = await api.get("/api/user/me",
-                {
-                    headers: {
-                        Authorization: `Bearer ${userData.token}`
-                    }
-                })
-
-                if (response.status === 200) {
-                    setUserData(u => ({
-                        ...u,
-                        user: response.data
-                    }))
-                    localStorage.setItem("userToken", userData.token)
-                    localStorage.setItem("userPreferences", response.data.preferences)
-                }
-            } catch (error) {
-                console.error("Error fetching user:", error)
-                setUserData({
-                    token: null,
-                    preferences: null,
-                    user: null
-                })
-                localStorage.setItem("userToken", null) 
-                localStorage.setItem("userPreferences", null)
-            }
-        }
-        fetchUser()
-    } ,[userData.token, userData.preferences, setUserData])
-
-    return (
-        <UserContext.Provider value={[userData, setUserData]}>
-            {props.children}
-        </UserContext.Provider>
-    )
-}
-
-export const useUser = () => useContext(UserContext)
+export const useUser = () => useContext(UserContext);
