@@ -20,6 +20,7 @@ const Header = ({ children, className }) => {
     // handle logout
     // TODO : call log out api endpoint instead of only handling in frontend
     updateState({ token: null, user: null });
+    localStorage.setItem("access_token", null);
     // window.location.reload()
   };
 
