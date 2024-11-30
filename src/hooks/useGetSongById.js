@@ -13,7 +13,11 @@ const useGetSongById = (id) => {
 
         const fetchSong = async () => {
             try {
-                const response = await api.get(`/get_track_by_id/${id}`)
+                const response = await api.get('/api/track/get-by-id', {
+                    params: {
+                      'track_id': id
+                    }
+                  });
                 if (response.status === 200) {
                     setSong(response.data)
                     setIsLoading(false)

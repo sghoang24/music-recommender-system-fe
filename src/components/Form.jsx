@@ -17,23 +17,25 @@ const Form = ({ method }) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const { updateState } = useContext(UserContext);
   const authModal = useAuthModal();
+  const {
+    state: { user },
+  } = useContext(UserContext);
 
   const submitLogin = async () => {
     try {
       const formData = new FormData();
+      formData.append("grant_type", "password");
       formData.append("username", username);
       formData.append("password", password);
       const response = await api.post("/api/token", formData);
-      const { access_token, userId, preferences } = response.data.data;
-
+      const { access_token, user_id, preferences } = response.data.data;
+      console.log(response.data.data);
       updateState({
         token: access_token,
-        user: { id: userId },
+        user: { id: user_id },
       });
-
       localStorage.setItem("access_token", access_token);
-      localStorage.setItem("userId", userId);
-
+      localStorage.setItem("userId", user_id);
       setLoggedIn(true);
       setErrorMessage("");
 
@@ -55,7 +57,7 @@ const Form = ({ method }) => {
         password: password,
       };
 
-      const response = await api.post("auth/users", userData);
+      const response = await api.post("api/user", userData);
       if (response.status === 201) {
         // console.log("User created")
         setErrorMessage("User created successfully");

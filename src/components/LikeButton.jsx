@@ -8,21 +8,25 @@ import api from "api";
 const LikeButton = ({ songId }) => {
   const navigate = useNavigate();
   const authModal = useAuthModal();
-  const { state, updateState } = useContext(UserContext);
+  // const { state, updateState } = useContext(UserContext);
   const [isLiked, setLiked] = useState(false);
+  const {
+    state: { user },
+  } = useContext(UserContext);
 
   const Icon = isLiked ? AiFillHeart : AiOutlineHeart;
 
   useEffect(() => {
-    if (!state.user?.id) {
+    if (!user?.id) {
       return;
     }
 
     const fetchData = async () => {
       try {
-        const response = await api.post(`/check_like`, {
+        console.log(user.id);
+        const response = await api.post(`/api/likedtrack/check-liked/`, {
           track_id: songId,
-          user_id: state.user.id,
+          user_id: user.id,
         });
         // console.log(response.data);
         if (response.status === 200) {
@@ -33,19 +37,19 @@ const LikeButton = ({ songId }) => {
       }
     };
     fetchData();
-  }, [songId, state.user?.id]);
+  }, [songId, user?.id]);
 
   const handleLike = async () => {
-    if (!state.user) {
+    if (!user) {
       return authModal.onOpenLogin();
     }
 
     if (isLiked) {
       // delete like song
       try {
-        const response = await api.post("/unlike_track", {
+        const response = await api.post("/api/likedtrack/unliked", {
           track_id: songId,
-          user_id: state.user.id,
+          user_id: user.id,
         });
 
         if (response.status === 200) {
@@ -57,9 +61,9 @@ const LikeButton = ({ songId }) => {
     } else {
       // like song
       try {
-        const response = await api.post("/like_track", {
+        const response = await api.post("/api/likedtrack/liked", {
           track_id: songId,
-          user_id: state.user.id,
+          user_id: user.id,
         });
         if (response.status === 200) {
           setLiked(true);

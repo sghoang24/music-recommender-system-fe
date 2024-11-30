@@ -13,7 +13,12 @@ const useGetRecommendSongs = (id) => {
 
         const fetchSongs = async () => {
             try {
-                const response = await api.get(`/get_recommendation/${id}`)
+                const response = await api.get('/api/track/recommendation-by-track/',{
+                    params: {
+                      'track_id': id
+                }}
+                );
+
                 if (response.status === 200) {
                     console.log(response.data);
                     setSongs(response.data)

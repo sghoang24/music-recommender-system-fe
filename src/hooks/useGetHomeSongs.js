@@ -9,19 +9,24 @@ const useGetHomeSongs = () => {
 
   useEffect(() => {
     setIsLoading(true);
+    //console.log(state);
     const fetchSongs = async () => {
       try {
         if (state.token) {
-          const response = await api.get(
-            `/get_tracks_for_user/${state.user.id}`
-          );
+          const response = await api.get('/api/track/recommendation-by-user/',{
+            params: {
+              'user_id': state.user.id
+        }}
+        );
+
+          // const response = await api.get("/api/track/get-random");
 
           if (response.status === 200) {
             setSongs(response.data);
             setIsLoading(false);
           }
         } else {
-          const response = await api.get("/get_10_tracks");
+          const response = await api.get("/api/track/get-random");
 
           if (response.status === 200) {
             setSongs(response.data);

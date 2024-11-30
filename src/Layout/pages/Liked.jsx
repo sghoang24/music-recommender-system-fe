@@ -15,9 +15,11 @@ const Liked = () => {
     // fetch liked songs
     const fetchSongs = async () => {
       try {
-        const response = await api.get(`/get_liked_tracks/${state.user.id}`);
+        const response = await api.post('/api/likedtrack/get-by-user', {
+          user_id: state.user.id
+        });
         if (response.status === 200) {
-          setSongs(response.data);
+          setSongs(response.data.list_liked_tracks);
         }
       } catch (error) {
         console.log(error);
