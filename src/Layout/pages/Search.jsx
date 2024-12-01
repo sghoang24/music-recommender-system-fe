@@ -39,7 +39,7 @@ const Search = () => {
 
           if (response.status === 200) {
             // console.log(response.data)
-            setSongs(response.data)
+            setSongs(response.data.list_tracks)
           }
         }
         else {

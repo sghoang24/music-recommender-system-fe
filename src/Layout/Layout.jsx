@@ -11,7 +11,7 @@ const Layout = ({ children }) => {
     const fetchUser = async () => {
       try {
         // console.log("user context");
-        console.log(state);
+        // console.log(state);
         const response = await api.get("/api/user/me", {
           headers: {
             Authorization: `Bearer ${token}`,

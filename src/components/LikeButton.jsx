@@ -23,7 +23,7 @@ const LikeButton = ({ songId }) => {
 
     const fetchData = async () => {
       try {
-        console.log(user.id);
+        // console.log(user.id);
         const response = await api.post(`/api/likedtrack/check-liked/`, {
           track_id: songId,
           user_id: user.id,
