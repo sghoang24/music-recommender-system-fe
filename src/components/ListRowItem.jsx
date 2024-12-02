@@ -31,7 +31,7 @@ const ListRowItem = ({
                 <CardBody>
                     <Typography>
                         Mutual tags : 
-                        {song.tags.split(", ").map((tag) => (
+                        {song.tags.map((tag) => (
                             <span className='text-blue-300'> #{tag} </span>
                         ))}
                     </Typography>

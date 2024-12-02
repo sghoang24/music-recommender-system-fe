@@ -8,29 +8,35 @@ const useGetHomeSongs = () => {
   const { state } = useContext(UserContext);
 
   useEffect(() => {
-    setIsLoading(true);
     const fetchSongs = async () => {
+      setIsLoading(true);
       try {
-        if (state.token) {
-          const response = await api.get(
-            `/get_tracks_for_user/${state.user.id}`
-          );
-
-          if (response.status === 200) {
-            setSongs(response.data);
+        if (state.token && state.token !== "null") {
+          const response = await api.get("/api/track/recommendation-by-user/", {
+            params: {
+              user_id: state.user.id,
+            },
+          });
+  
+          if (response.status === 200  && response.data.list_tracks.length > 0) {
+            setSongs(response.data.list_tracks);
             setIsLoading(false);
+          } else {
+            const response = await api.get("/api/track/get-random");
+            if (response.status === 200) {
+              setSongs(response.data.list_tracks);
+              setIsLoading(false);
+            }
           }
         } else {
-          const response = await api.get("/get_10_tracks");
-
+          const response = await api.get("/api/track/get-random");
           if (response.status === 200) {
-            setSongs(response.data);
+            setSongs(response.data.list_tracks);
             setIsLoading(false);
           }
         }
       } catch (error) {
         console.log(error);
-        setIsLoading(false);
       }
     };
     fetchSongs();

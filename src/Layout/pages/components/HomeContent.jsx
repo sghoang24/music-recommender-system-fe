@@ -5,7 +5,7 @@ import Spinner from '../../../components/Spinner'
 
 const PageContent = ({songs, isLoading}) => {
     const onPlay = useOnPlay(songs)
-    if (songs.length === 0) {
+    if (songs?.length === 0) {
         return (
             <div className='mt4
              text-neutral-400'>
@@ -21,7 +21,7 @@ const PageContent = ({songs, isLoading}) => {
         </div>
     ) : (
         <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-8 gap-4 mt-4'>
-            {songs.map((item) => (
+            {songs?.map((item) => (
                 <SongItem data={item} key={item.id} onClick={(id) => onPlay(id)}/>
             ))}
         </div>

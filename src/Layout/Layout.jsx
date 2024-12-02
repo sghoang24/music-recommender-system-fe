@@ -6,13 +6,15 @@ import api from "api";
 
 const Layout = ({ children }) => {
   const { state, updateData, updateState } = useContext(UserContext);
+  const token = localStorage.getItem("access_token");
   useEffect(() => {
     const fetchUser = async () => {
       try {
         // console.log("user context");
+        // console.log(state);
         const response = await api.get("/api/user/me", {
           headers: {
-            Authorization: `Bearer ${state.token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 
